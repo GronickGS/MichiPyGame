@@ -18,7 +18,7 @@ VERDE = (0, 255, 0)
 
 # Configurar la ventana del juego
 pantalla = pygame.display.set_mode((ANCHO, ALTO))
-pygame.display.set_caption("Tres en Raya")
+pygame.display.set_caption("Michi")
 pantalla.fill(BLANCO)
 
 # Tablero

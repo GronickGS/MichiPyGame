@@ -1,72 +1,80 @@
 import tkinter as tk
 from tkinter import messagebox
 
-class TicTacToeGame:
+class JuegoTresEnRaya:
     def __init__(self, root):
         self.root = root
-        self.root.title("Tres en Raya")
-        self.current_player = "O"
-        self.board = [['' for _ in range(3)] for _ in range(3)]
-        self.buttons = []
-        self.create_board()
+        self.root.title("Michi")
+        self.jugador_actual = "O"
+        self.tablero = [['' for _ in range(3)] for _ in range(3)]
+        self.botones = []
+        self.crear_tablero()
+        self.centrar_ventana()  # Centrar la ventana al inicializar el juego
 
-    def create_board(self):
+    def crear_tablero(self):
         for i in range(3):
-            row_buttons = []
+            fila_botones = []
             for j in range(3):
                 btn = tk.Button(self.root, text="", font=('Arial', 30), width=4, height=2,
-                                command=lambda row=i, col=j: self.on_button_click(row, col))
+                                command=lambda fila=i, columna=j: self.on_click_boton(fila, columna))
                 btn.grid(row=i, column=j, sticky="nsew")
-                row_buttons.append(btn)
-            self.buttons.append(row_buttons)
+                fila_botones.append(btn)
+            self.botones.append(fila_botones)
 
-    def on_button_click(self, row, col):
-        if self.board[row][col] == "":
-            self.buttons[row][col].config(text=self.current_player)
-            self.board[row][col] = self.current_player
-            if self.check_winner():
-                self.show_winner()
-            elif self.check_tie():
-                self.show_tie()
+    def centrar_ventana(self):
+        ancho_ventana = self.root.winfo_reqwidth()
+        alto_ventana = self.root.winfo_reqheight()
+        pos_x = (self.root.winfo_screenwidth() // 2) - (ancho_ventana // 2)
+        pos_y = (self.root.winfo_screenheight() // 2) - (alto_ventana // 2)
+        self.root.geometry(f"+{pos_x}+{pos_y}")
+
+    def on_click_boton(self, fila, columna):
+        if self.tablero[fila][columna] == "":
+            self.botones[fila][columna].config(text=self.jugador_actual)
+            self.tablero[fila][columna] = self.jugador_actual
+            if self.verificar_ganador():
+                self.mostrar_ganador()
+            elif self.verificar_empate():
+                self.mostrar_empate()
             else:
-                self.current_player = "X" if self.current_player == "O" else "O"
+                self.jugador_actual = "X" if self.jugador_actual == "O" else "O"
 
-    def check_winner(self):
+    def verificar_ganador(self):
         for i in range(3):
-            if self.board[i][0] == self.board[i][1] == self.board[i][2] != "":
+            if self.tablero[i][0] == self.tablero[i][1] == self.tablero[i][2] != "":
                 return True
-            if self.board[0][i] == self.board[1][i] == self.board[2][i] != "":
+            if self.tablero[0][i] == self.tablero[1][i] == self.tablero[2][i] != "":
                 return True
-        if self.board[0][0] == self.board[1][1] == self.board[2][2] != "":
+        if self.tablero[0][0] == self.tablero[1][1] == self.tablero[2][2] != "":
             return True
-        if self.board[0][2] == self.board[1][1] == self.board[2][0] != "":
+        if self.tablero[0][2] == self.tablero[1][1] == self.tablero[2][0] != "":
             return True
         return False
 
-    def check_tie(self):
-        for row in self.board:
-            for cell in row:
-                if cell == "":
+    def verificar_empate(self):
+        for fila in self.tablero:
+            for celda in fila:
+                if celda == "":
                     return False
         return True
 
-    def show_winner(self):
-        winner = "X" if self.current_player == "O" else "O"
-        messagebox.showinfo("Resultado", f"Ganador: Jugador {winner}")
-        self.reset_game()
+    def mostrar_ganador(self):
+        ganador = "X" if self.jugador_actual == "X" else "O"
+        messagebox.showinfo("Resultado", f"Ganador: Jugador {ganador}")
+        self.reiniciar_juego()
 
-    def show_tie(self):
+    def mostrar_empate(self):
         messagebox.showinfo("Resultado", "Empate")
-        self.reset_game()
+        self.reiniciar_juego()
 
-    def reset_game(self):
-        self.current_player = "O"
-        self.board = [['' for _ in range(3)] for _ in range(3)]
-        for row in self.buttons:
-            for button in row:
-                button.config(text="")
+    def reiniciar_juego(self):
+        self.jugador_actual = "O"
+        self.tablero = [['' for _ in range(3)] for _ in range(3)]
+        for fila in self.botones:
+            for boton in fila:
+                boton.config(text="")
 
 if __name__ == "__main__":
     root = tk.Tk()
-    game = TicTacToeGame(root)
+    juego = JuegoTresEnRaya(root)
     root.mainloop()
